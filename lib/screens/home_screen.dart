@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicine_reminder_app/constants/colors.dart';
+import 'package:medicine_reminder_app/screens/newEntry/new_entry_page.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,7 +9,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: bgColor,
+      ),
 
       //?? body ->
       body: Padding(
@@ -26,7 +29,14 @@ class HomeScreen extends StatelessWidget {
 
       //?? floating action button ->
       floatingActionButton: InkResponse(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NewEntryPage(),
+            ),
+          );
+        },
         child: SizedBox(
           width: 18.w,
           height: 9.h,

@@ -9,5 +9,5 @@ const Color kScaffoldColor = Color(0xFFF3F4F8);
 const Color kSecondaryColor = Color(0xFFF95C54);
 const Color kOtherColor = Color(0xFF59C1BD);
 const Color kErrorBorderColor = Color(0xFFE74C3C);
-const Color kTextLightColor = Color(0xFF8E8E94);
-const Color kTextColor = Color(0xFF56485D);
+const Color kTextLightColor = Color(0xFF9696D7);
+const Color kTextColor = Color(0xFFD49AF3);

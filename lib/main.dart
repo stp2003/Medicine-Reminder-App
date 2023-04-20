@@ -23,13 +23,13 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Medicine Reminder',
           theme: ThemeData.dark(useMaterial3: true).copyWith(
             primaryColor: kPrimaryColor,
-            scaffoldBackgroundColor: kScaffoldColor,
+            scaffoldBackgroundColor: bgColor,
             appBarTheme: AppBarTheme(
               toolbarHeight: 7.h,
-              backgroundColor: kScaffoldColor,
+              backgroundColor: appBarColor,
               elevation: 0,
               iconTheme: IconThemeData(
-                color: kSecondaryColor,
+                color: kPrimaryColor,
                 size: 20.sp,
               ),
               titleTextStyle: GoogleFonts.mulish(
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
               labelMedium: TextStyle(
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w500,
-                color: kTextColor,
+                color: kScaffoldColor,
               ),
             ),
             inputDecorationTheme: const InputDecorationTheme(
@@ -94,12 +94,12 @@ class MyApp extends StatelessWidget {
 
             //** customize the timePicker theme ->
             timePickerTheme: TimePickerThemeData(
-              backgroundColor: kScaffoldColor,
-              hourMinuteColor: kTextColor,
+              backgroundColor: cardColor,
+              hourMinuteColor: appBarColor,
               hourMinuteTextColor: kScaffoldColor,
-              dayPeriodColor: kTextColor,
+              dayPeriodColor: appBarColor,
               dayPeriodTextColor: kScaffoldColor,
-              dialBackgroundColor: kTextColor,
+              dialBackgroundColor: appBarColor,
               dialHandColor: kPrimaryColor,
               dialTextColor: kScaffoldColor,
               entryModeIconColor: kOtherColor,
