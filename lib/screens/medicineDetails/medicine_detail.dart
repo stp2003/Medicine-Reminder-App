@@ -46,7 +46,9 @@ class _MedicineDetailState extends State<MedicineDetail> {
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  openAlertBox(context);
+                },
                 child: Text(
                   'Delete',
                   style: Theme.of(context)
@@ -60,6 +62,58 @@ class _MedicineDetailState extends State<MedicineDetail> {
           ],
         ),
       ),
+    );
+  }
+
+  //?? alert dialog box ->
+  openAlertBox(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: appBarColor,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              bottomRight: Radius.circular(20.0),
+            ),
+          ),
+          contentPadding: EdgeInsets.only(top: 1.h),
+          title: Text(
+            'Delete This Reminder?',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: Colors.white),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                //global block to delete medicine,later
+                // _globalBloc.removeMedicine(widget.medicine);
+                // Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+              child: Text(
+                'OK',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: kSecondaryColor),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
