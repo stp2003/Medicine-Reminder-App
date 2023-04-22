@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicine_reminder_app/constants/colors.dart';
 import 'package:medicine_reminder_app/screens/newEntry/new_entry_page.dart';
 import 'package:sizer/sizer.dart';
+
+import 'medicineDetails/medicine_detail.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -103,11 +106,77 @@ class BottomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'No Medicine',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.displaySmall,
+    // return Center(
+    //   child: Text(
+    //     'No Medicine',
+    //     textAlign: TextAlign.center,
+    //     style: Theme.of(context).textTheme.displaySmall,
+    //   ),
+    // );
+    return GridView.builder(
+      padding: EdgeInsets.only(top: 1.h),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return const MedicineCard();
+      },
+    );
+  }
+}
+
+//?? medicine card ->
+class MedicineCard extends StatelessWidget {
+  const MedicineCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      highlightColor: appBarColor,
+      splashColor: Colors.grey,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MedicineDetail(),
+          ),
+        );
+      },
+      child: Container(
+        padding:
+            EdgeInsets.only(left: 2.5.w, right: 2.w, top: 1.h, bottom: 1.5.h),
+        margin: EdgeInsets.all(1.h),
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(2.h),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            SvgPicture.asset(
+              'assets/icons/bottle.svg',
+              height: 7.h,
+              color: kOtherColor,
+            ),
+            const Spacer(),
+            Text(
+              'Cal-pol',
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.start,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            SizedBox(height: 0.3.h),
+            Text(
+              'Every 8 hrs',
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.start,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }
