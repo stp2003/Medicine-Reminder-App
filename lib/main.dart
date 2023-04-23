@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medicine_reminder_app/constants/colors.dart';
+import 'package:medicine_reminder_app/global_bloc.dart';
 import 'package:medicine_reminder_app/screens/home_screen.dart';
-import 'package:medicine_reminder_app/screens/newEntry/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -22,20 +22,20 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   //**
-  NewEntryBloc? newEntryBloc;
+  GlobalBloc? globalBloc;
 
   //?? init ->
   @override
   void initState() {
-    newEntryBloc = NewEntryBloc();
+    globalBloc = GlobalBloc();
     super.initState();
   }
 
   //?? build ->
   @override
   Widget build(BuildContext context) {
-    return Provider<NewEntryBloc>.value(
-      value: newEntryBloc!,
+    return Provider<GlobalBloc>.value(
+      value: globalBloc!,
       child: Sizer(
         builder: (context, orientation, deviceType) {
           return MaterialApp(
