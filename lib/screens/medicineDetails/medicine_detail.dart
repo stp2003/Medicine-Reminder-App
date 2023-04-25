@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicine_reminder_app/constants/colors.dart';
+import 'package:medicine_reminder_app/models/medicine.dart';
 import 'package:sizer/sizer.dart';
 
 class MedicineDetail extends StatefulWidget {
-  const MedicineDetail({Key? key}) : super(key: key);
+  const MedicineDetail({
+    Key? key,
+    required this.medicine,
+  }) : super(key: key);
+
+  //**
+  final Medicine medicine;
 
   @override
   State<MedicineDetail> createState() => _MedicineDetailState();
@@ -31,9 +38,13 @@ class _MedicineDetailState extends State<MedicineDetail> {
         child: Column(
           children: [
             //?? main section ->
-            const MainSection(),
+            MainSection(
+              medicine: widget.medicine,
+            ),
             //?? Extended section ->
-            const ExtendedInfo(),
+            ExtendedInfo(
+              medicine: widget.medicine,
+            ),
             const Spacer(),
             //?? text button ->
             SizedBox(
@@ -120,28 +131,91 @@ class _MedicineDetailState extends State<MedicineDetail> {
 
 //?? main section ->
 class MainSection extends StatelessWidget {
-  const MainSection({Key? key}) : super(key: key);
+  const MainSection({
+    Key? key,
+    this.medicine,
+  }) : super(key: key);
+
+  //**
+  final Medicine? medicine;
 
   @override
   Widget build(BuildContext context) {
+    //??
+    Hero makeIcon(double size) {
+      if (medicine!.medicineType == 'Bottle') {
+        return Hero(
+          tag: medicine!.medicineName! + medicine!.medicineType!,
+          child: SvgPicture.asset(
+            'assets/icons/bottle.svg',
+            color: kOtherColor,
+            height: 7.h,
+          ),
+        );
+      } else if (medicine!.medicineType == 'Pill') {
+        return Hero(
+          tag: medicine!.medicineName! + medicine!.medicineType!,
+          child: SvgPicture.asset(
+            'assets/icons/pill.svg',
+            color: kOtherColor,
+            height: 7.h,
+          ),
+        );
+      } else if (medicine!.medicineType == 'Syringe') {
+        return Hero(
+          tag: medicine!.medicineName! + medicine!.medicineType!,
+          child: SvgPicture.asset(
+            'assets/icons/syringe.svg',
+            color: kOtherColor,
+            height: 7.h,
+          ),
+        );
+      } else if (medicine!.medicineType == 'Tablet') {
+        return Hero(
+          tag: medicine!.medicineName! + medicine!.medicineType!,
+          child: SvgPicture.asset(
+            'assets/icons/tablet.svg',
+            color: kOtherColor,
+            height: 7.h,
+          ),
+        );
+      }
+      //** in case of no medicine type icon selection ->
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: Icon(
+          Icons.error,
+          color: kOtherColor,
+          size: size,
+        ),
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SvgPicture.asset(
-          'assets/icons/bottle.svg',
-          height: 7.h,
-          color: kOtherColor,
-        ),
+        makeIcon(7.h),
         SizedBox(width: 2.w),
         Column(
-          children: const [
-            MainInfoTab(
-              fieldTitle: 'Medicine Name',
-              fieldInfo: 'Catapol',
+          children: [
+            Hero(
+              tag: medicine!.medicineName!,
+              child: Material(
+                color: Colors.transparent,
+                child: MainInfoTab(
+                  fieldTitle: 'Medicine Name',
+                  fieldInfo: medicine!.medicineName!,
+                ),
+              ),
             ),
-            MainInfoTab(
-              fieldTitle: 'Dosage',
-              fieldInfo: '500 mg',
+            Hero(
+              tag: medicine!.interval!,
+              child: MainInfoTab(
+                fieldTitle: 'Dosage',
+                fieldInfo: medicine!.dosage == 0
+                    ? 'Not Specified'
+                    : "${medicine!.dosage} mg",
+              ),
             ),
           ],
         ),
@@ -189,18 +263,35 @@ class MainInfoTab extends StatelessWidget {
 
 //?? Extended info ->
 class ExtendedInfo extends StatelessWidget {
-  const ExtendedInfo({Key? key}) : super(key: key);
+  const ExtendedInfo({
+    Key? key,
+    this.medicine,
+  }) : super(key: key);
+
+  //**
+  final Medicine? medicine;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
-      children: const [
-        ExtendedInfoTab(fieldTitle: 'Medicine Type', fieldInfo: 'Pill'),
+      children: [
         ExtendedInfoTab(
-            fieldTitle: 'Dosage Interval',
-            fieldInfo: 'Every 8 hours | 3 times a day'),
-        ExtendedInfoTab(fieldTitle: 'Start Time', fieldInfo: '01:19'),
+          fieldTitle: 'Medicine Type',
+          fieldInfo: medicine!.medicineType! == 'None'
+              ? 'Not Specified'
+              : medicine!.medicineType!,
+        ),
+        ExtendedInfoTab(
+          fieldTitle: 'Dosage Interval',
+          fieldInfo:
+              'Every ${medicine!.interval} hours  |  ${medicine!.interval == 24 ? "One time a day" : "${(24 / medicine!.interval!).floor()} times a day"}',
+        ),
+        ExtendedInfoTab(
+          fieldTitle: 'Start Time',
+          fieldInfo:
+              '${medicine!.startTime![0]}${medicine!.startTime![1]}:${medicine!.startTime![2]}${medicine!.startTime![3]}',
+        ),
       ],
     );
   }

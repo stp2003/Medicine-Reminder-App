@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicine_reminder_app/constants/colors.dart';
+import 'package:medicine_reminder_app/global_bloc.dart';
+import 'package:medicine_reminder_app/models/medicine.dart';
 import 'package:medicine_reminder_app/screens/newEntry/new_entry_page.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import 'medicineDetails/medicine_detail.dart';
@@ -66,6 +69,8 @@ class TopContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //**
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -87,13 +92,20 @@ class TopContainer extends StatelessWidget {
           ),
         ),
         SizedBox(height: 2.h),
-        Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.only(bottom: 1.h),
-          child: Text(
-            '0',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+
+        //?? no of saved medicines ->
+        StreamBuilder<List<Medicine>>(
+          stream: globalBloc.medicineList$,
+          builder: (context, snapshot) {
+            return Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: 1.h),
+              child: Text(
+                !snapshot.hasData ? '0' : snapshot.data!.length.toString(),
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            );
+          },
         ),
       ],
     );
@@ -113,14 +125,36 @@ class BottomContainer extends StatelessWidget {
     //     style: Theme.of(context).textTheme.displaySmall,
     //   ),
     // );
-    return GridView.builder(
-      padding: EdgeInsets.only(top: 1.h),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return const MedicineCard();
+
+    //**
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
+    return StreamBuilder(
+      stream: globalBloc.medicineList$,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        } else if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text(
+              'No Medicine',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+          );
+        } else {
+          return GridView.builder(
+            padding: EdgeInsets.only(top: 1.h),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return MedicineCard(
+                medicine: snapshot.data![index],
+              );
+            },
+          );
+        }
       },
     );
   }
@@ -128,18 +162,86 @@ class BottomContainer extends StatelessWidget {
 
 //?? medicine card ->
 class MedicineCard extends StatelessWidget {
-  const MedicineCard({Key? key}) : super(key: key);
+  const MedicineCard({
+    Key? key,
+    required this.medicine,
+  }) : super(key: key);
 
+  //**
+  final Medicine medicine;
+
+  //??
+  Hero makeIcon(double size) {
+    if (medicine.medicineType == 'Bottle') {
+      return Hero(
+        tag: medicine.medicineName! + medicine.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/bottle.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    } else if (medicine.medicineType == 'Pill') {
+      return Hero(
+        tag: medicine.medicineName! + medicine.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/pill.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    } else if (medicine.medicineType == 'Syringe') {
+      return Hero(
+        tag: medicine.medicineName! + medicine.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/syringe.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    } else if (medicine.medicineType == 'Tablet') {
+      return Hero(
+        tag: medicine.medicineName! + medicine.medicineType!,
+        child: SvgPicture.asset(
+          'assets/icons/tablet.svg',
+          color: kOtherColor,
+          height: 7.h,
+        ),
+      );
+    }
+    //** in case of no medicine type icon selection ->
+    return Hero(
+      tag: medicine.medicineName! + medicine.medicineType!,
+      child: Icon(
+        Icons.error,
+        color: kOtherColor,
+        size: size,
+      ),
+    );
+  }
+
+  //?? build ->
   @override
   Widget build(BuildContext context) {
     return InkWell(
       highlightColor: appBarColor,
       splashColor: Colors.grey,
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MedicineDetail(),
+        Navigator.of(context).push(
+          PageRouteBuilder<void>(
+            pageBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation) {
+              return AnimatedBuilder(
+                animation: animation,
+                builder: (context, Widget? child) {
+                  return Opacity(
+                    opacity: animation.value,
+                    child: MedicineDetail(medicine: medicine),
+                  );
+                },
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 500),
           ),
         );
       },
@@ -156,21 +258,22 @@ class MedicineCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            SvgPicture.asset(
-              'assets/icons/bottle.svg',
-              height: 7.h,
-              color: kOtherColor,
-            ),
+            makeIcon(7.h),
             const Spacer(),
-            Text(
-              'Cal-pol',
-              overflow: TextOverflow.fade,
-              textAlign: TextAlign.start,
-              style: Theme.of(context).textTheme.titleLarge,
+            Hero(
+              tag: medicine.medicineName!,
+              child: Text(
+                medicine.medicineName!,
+                overflow: TextOverflow.fade,
+                textAlign: TextAlign.start,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
             SizedBox(height: 0.3.h),
             Text(
-              'Every 8 hrs',
+              medicine.interval == 1
+                  ? "Every ${medicine.interval} hour"
+                  : "Every ${medicine.interval} hour",
               overflow: TextOverflow.fade,
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.bodySmall,
