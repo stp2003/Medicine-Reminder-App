@@ -84,6 +84,7 @@ class _NewEntryPageState extends State<NewEntryPage> {
                 title: 'Medicine Name',
                 isRequired: true,
               ),
+
               //?? TFF for name->
               TextFormField(
                 maxLength: 15,
@@ -247,9 +248,6 @@ class _NewEntryPageState extends State<NewEntryPage> {
                       //** update medicine list via global bloc ->
                       globalBloc.updateMedicineList(newEntryMedicine);
 
-                      //** schedule notification ->
-                      // scheduleNotification(newEntryMedicine);
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -278,27 +276,29 @@ class _NewEntryPageState extends State<NewEntryPage> {
 
   //?? init error  ->
   void initializeErrorListen() {
-    _newEntryBloc.errorState$!.listen((EntryError error) {
-      switch (error) {
-        case EntryError.nameNull:
-          displayError("Please enter the medicine's name");
-          break;
+    _newEntryBloc.errorState$!.listen(
+      (EntryError error) {
+        switch (error) {
+          case EntryError.nameNull:
+            displayError("Please enter the medicine's name");
+            break;
 
-        case EntryError.nameDuplicate:
-          displayError("Medicine name already exists");
-          break;
-        case EntryError.dosage:
-          displayError("Please enter the dosage required");
-          break;
-        case EntryError.interval:
-          displayError("Please select the reminder's interval");
-          break;
-        case EntryError.startTime:
-          displayError("Please select the reminder's starting time");
-          break;
-        default:
-      }
-    });
+          case EntryError.nameDuplicate:
+            displayError("Medicine name already exists");
+            break;
+          case EntryError.dosage:
+            displayError("Please enter the dosage required");
+            break;
+          case EntryError.interval:
+            displayError("Please select the reminder's interval");
+            break;
+          case EntryError.startTime:
+            displayError("Please select the reminder's starting time");
+            break;
+          default:
+        }
+      },
+    );
   }
 
   //?? display error in snack bar ->
