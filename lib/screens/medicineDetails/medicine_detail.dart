@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicine_reminder_app/constants/colors.dart';
+import 'package:medicine_reminder_app/global_bloc.dart';
 import 'package:medicine_reminder_app/models/medicine.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class MedicineDetail extends StatefulWidget {
@@ -20,6 +22,9 @@ class MedicineDetail extends StatefulWidget {
 class _MedicineDetailState extends State<MedicineDetail> {
   @override
   Widget build(BuildContext context) {
+    //**
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -58,7 +63,7 @@ class _MedicineDetailState extends State<MedicineDetail> {
                   ),
                 ),
                 onPressed: () {
-                  openAlertBox(context);
+                  openAlertBox(context, _globalBloc);
                 },
                 child: Text(
                   'Delete',
@@ -77,7 +82,7 @@ class _MedicineDetailState extends State<MedicineDetail> {
   }
 
   //?? alert dialog box ->
-  openAlertBox(BuildContext context) {
+  openAlertBox(BuildContext context, GlobalBloc globalBloc) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -110,9 +115,8 @@ class _MedicineDetailState extends State<MedicineDetail> {
             ),
             TextButton(
               onPressed: () {
-                //global block to delete medicine,later
-                // _globalBloc.removeMedicine(widget.medicine);
-                // Navigator.popUntil(context, ModalRoute.withName('/'));
+                globalBloc.removeMedicine(widget.medicine);
+                Navigator.popUntil(context, ModalRoute.withName('/'));
               },
               child: Text(
                 'OK',
