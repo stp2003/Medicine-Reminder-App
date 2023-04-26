@@ -23,7 +23,7 @@ class _MedicineDetailState extends State<MedicineDetail> {
   @override
   Widget build(BuildContext context) {
     //**
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +63,7 @@ class _MedicineDetailState extends State<MedicineDetail> {
                   ),
                 ),
                 onPressed: () {
-                  openAlertBox(context, _globalBloc);
+                  openAlertBox(context, globalBloc);
                 },
                 child: Text(
                   'Delete',

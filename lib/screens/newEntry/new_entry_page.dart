@@ -338,8 +338,8 @@ class _SelectedTimeState extends State<SelectedTime> {
 
   //??
   Future<TimeOfDay> _selectTime() async {
-    // final NewEntryBloc newEntryBloc =
-    //     Provider.of<NewEntryBloc>(context, listen: false);
+    final NewEntryBloc newEntryBloc =
+        Provider.of<NewEntryBloc>(context, listen: false);
 
     final TimeOfDay? picked =
         await showTimePicker(context: context, initialTime: _time);
@@ -349,9 +349,8 @@ class _SelectedTimeState extends State<SelectedTime> {
         _time = picked;
         _clicked = true;
 
-        //update state via provider, we will do later
-        // newEntryBloc.updateTime(convertTime(_time.hour.toString()) +
-        //     convertTime(_time.minute.toString()));
+        newEntryBloc.updateTime(convertTime(_time.hour.toString()) +
+            convertTime(_time.minute.toString()));
       });
     }
     return picked!;
